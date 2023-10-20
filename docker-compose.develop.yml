@@ -1,0 +1,71 @@
+version: "3.9"
+services:
+  broker:
+    build:
+      context: .
+      dockerfile: redis.Dockerfile
+    container_name: cloud-conversion-tool-broker
+    ports:
+      - "6380:6379"
+    volumes:
+      - ./data/redis/:/data
+  formatter-api:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    container_name: cloud-conversion-tool-formatter-api
+    volumes:
+      - ".:/app"
+    ports:
+      - "8001:8000"
+    env_file:
+      - .env.dev
+    tty: true
+    depends_on:
+      - broker
+    links:
+      - broker
+  db:
+    image: postgres
+    env_file:
+      - .env.db
+    container_name: cloud-conversion-tool-db
+    volumes:
+      - "./data/postgres:/var/lib/postgresql"
+    ports:
+      - "5432:5432"
+    networks:
+      - default
+  gateway:
+    build:
+      context: ../cloud-conversion-tool-api/.
+      dockerfile: ../cloud-conversion-tool-api/dev.Dockerfile
+    container_name: cloud-conversion-tool-api
+    volumes:
+      - "../cloud-conversion-tool-api/.:/app"
+    ports:
+      - "5001:5000"
+    env_file:
+      - ../cloud-conversion-tool-api/.env.dev
+    tty: true
+    depends_on:
+      - broker
+      - formatter-api
+    links:
+      - broker
+      - formatter-api
+  postgres-ui:
+    image: dpage/pgadmin4
+    env_file:
+      - .env.pg
+    container_name: pgadmin-web
+    volumes:
+      - ./data/pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    links:
+      - db
+    networks:
+      - default

@@ -14,8 +14,10 @@ services:
       context: .
       dockerfile: dev.Dockerfile
     container_name: cloud-conversion-tool-formatter-api
+    restart: always
     volumes:
       - ".:/app"
+      - file_storage:/app/videos
     ports:
       - "8001:8000"
     env_file:
@@ -23,8 +25,12 @@ services:
     tty: true
     depends_on:
       - broker
+      - db
+      - auth-db
     links:
       - broker
+      - db
+      - auth-db
   db:
     image: postgres
     env_file:
@@ -34,8 +40,17 @@ services:
       - "./data/postgres:/var/lib/postgresql"
     ports:
       - "5432:5432"
-    networks:
-      - default
+  auth-db:
+    image: postgres
+    env_file:
+      - ../cloud-conversion-tool-api/.env.db
+    container_name: auth-db
+    volumes:
+      - "./data/postgres:/var/lib/postgresql"
+    expose:
+      - "5440"
+    ports:
+      - "5440:5440"
   gateway:
     build:
       context: ../cloud-conversion-tool-api/.
@@ -43,6 +58,8 @@ services:
     container_name: cloud-conversion-tool-api
     volumes:
       - "../cloud-conversion-tool-api/.:/app"
+      - "./videos:/app/videos"
+      - file_storage:/app/videos
     ports:
       - "5001:5000"
     env_file:
@@ -50,9 +67,11 @@ services:
     tty: true
     depends_on:
       - broker
+      - auth-db
       - formatter-api
     links:
       - broker
+      - auth-db
       - formatter-api
   postgres-ui:
     image: dpage/pgadmin4
@@ -69,3 +88,5 @@ services:
       - db
     networks:
       - default
+volumes:
+  file_storage:

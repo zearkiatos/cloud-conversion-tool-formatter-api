@@ -26,5 +26,19 @@ else
 	flask run -p $(port) -h 0.0.0.0
 endif
 
+run-worker:
+	celery -A flaskr.tasks worker -l info
+
+run-docker-worker:
+ifeq ($(strip $(port)),)
+	flask run -h 0.0.0.0; make run-worker
+else
+	flask run -p $(port) -h 0.0.0.0; make run-worker
+endif
+
+run-docker-gunicorn:
+	 gunicorn --bind 0.0.0.0:8000 wsgi:app; make run-worker
+
+
 docker-gunicorn:
 	gunicorn --bind 0.0.0.0:8000 wsgi:app

@@ -2,3 +2,10 @@
 venv
 __pycache__
 data
+.psql_history
+*.mp4
+*.webm
+*.wmv
+*.avi
+*.mpeg
+*.mp4

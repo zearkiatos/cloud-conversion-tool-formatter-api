@@ -17,6 +17,7 @@ class Config:
     JWT_SECRET_KEY=os.getenv('JWT_SECRET_KEY')
     APP_NAME=os.getenv('APP_NAME')
     PATH_STORAGE=os.getenv('PATH_STORAGE')
+    CONVERSION_BUCKET=os.getenv('CONVERSION_BUCKET')
     TASK_POSTED_TOPICS = {
         'TASK_POSTED': os.getenv('TOPIC_TASK_POSTED')
     }

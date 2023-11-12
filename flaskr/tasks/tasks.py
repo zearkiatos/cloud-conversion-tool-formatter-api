@@ -29,7 +29,7 @@ def convert_video(task_json):
     print(task_json)
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(config.CONVERSION_BUCKET)
-                    
+    converted=True                
     print('descargando archivo del google cloud storage')
     input_file='input/'+task_json['id']+task_json['fileName']
     blob = bucket.blob(input_file)
@@ -47,9 +47,10 @@ def convert_video(task_json):
         #MP4	WEBM	AVI	MPEG	WMV
 
         status='processed'
-
+        print(f'origin= {origin}  destination={destination} tempfile={temp_file.name}')
         if(origin=='MP4' and destination=='WEBM'):
             converter.mp4towebm(idvideo,input_file,outputFileName)
+            
         elif(origin=='MP4' and destination=='AVI'):
             converter.mp4toavi(idvideo,input_file,outputFileName)
         elif(origin=='MP4' and destination=='MPEG'):
@@ -91,13 +92,17 @@ def convert_video(task_json):
         else:
             print('Conversion no supported')
             status='Conversion no supported'
+            converted=False
+            
+        if converted:
+            #changing status in database
+            conversion=Conversion.query.filter_by(id=int(task_json['id'])).one()
+            conversion.status=status
+            db.session.commit()
 
-        #changing status in database
-        conversion=Conversion.query.filter_by(id=int(task_json['id'])).one()
-        conversion.status=status
-        db.session.commit()
-
-        print('video converted success')
+            print('video converted success')
+        else
+            print('video no converted')
     
 
 

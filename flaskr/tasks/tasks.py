@@ -99,6 +99,13 @@ def convert_video(task_json):
             conversion=Conversion.query.filter_by(id=int(task_json['id'])).one()
             conversion.status=status
             db.session.commit()
+            #storing file
+            storage_client = storage.Client()
+            bucket = storage_client.get_bucket(config.CONVERSION_BUCKET)
+            blob = bucket.blob('output/'+str(task_json['id'])+outputFileName+'.'+destination.lower())
+            ruta_del_archivo= config.PATH_STORAGE+'output/'+str(task_json['id'])+outputFileName+'.'+destination.lower()
+            blob.upload_from_filename(ruta_del_archivo)
+
 
             print('video converted success')
         else:

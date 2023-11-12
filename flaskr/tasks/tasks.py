@@ -39,7 +39,7 @@ def convert_video(task_json):
         input_file=temp_file.name
         idvideo=task_json['id']
         
-        extension = os.path.splitext(input_file)[1]
+        extension = os.path.splitext(task_json['fileName'])[1]
         destination=task_json['newFormat']
         origin=extension.upper().replace('.','')
         outputFileName=task_json['fileName']

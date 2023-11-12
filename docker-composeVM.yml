@@ -12,14 +12,14 @@ services:
     env_file:
       - .env.dev
     tty: true
-  server:
-    build:
-      context: .
-      dockerfile: nginx.Dockerfile
-    ports:
-      - 80:80
-      - 8080:8080
-    depends_on:
-      - formatter-api
-    links:
-      - formatter-api
+  # server:
+  #   build:
+  #     context: .
+  #     dockerfile: nginx.Dockerfile
+  #   ports:
+  #     - 80:80
+  #     - 8080:8080
+  #   depends_on:
+  #     - formatter-api
+  #   links:
+  #     - formatter-api

@@ -101,7 +101,7 @@ def convert_video(task_json):
             db.session.commit()
 
             print('video converted success')
-        else
+        else:
             print('video no converted')
     
 

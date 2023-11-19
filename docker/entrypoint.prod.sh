@@ -1,1 +1,1 @@
-make run-docker-gunicorn
+make docker-gunicorn

@@ -15,3 +15,5 @@ psycopg2-binary==2.9.6
 moviepy
 pydub==0.25.1
 google-cloud-storage
+google-api-python-client
+schedule

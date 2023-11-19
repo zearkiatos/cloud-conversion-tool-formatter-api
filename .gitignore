@@ -9,3 +9,5 @@ data
 *.avi
 *.mpeg
 *.mp4
+key
+.DS_Store

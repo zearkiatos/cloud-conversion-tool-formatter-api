@@ -8,6 +8,7 @@ from flaskr import create_app
 from config import Config
 from celery import Celery
 from .dataContext.sqlAlchemyContext import db
+from .jobs.consumers import start_consuming
 
 config = Config()
 
@@ -22,5 +23,6 @@ db.create_all()
 
 api = Api(app)
 
+start_consuming()
 #resources
 api.add_resource(HealthCheckView, '/health')

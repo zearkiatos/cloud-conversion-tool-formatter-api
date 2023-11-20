@@ -42,7 +42,7 @@ else
 endif
 
 run-docker-gunicorn:
-	 gunicorn --bind 0.0.0.0:8000 wsgi:app; make run-worker
+	gunicorn --bind 0.0.0.0:8000 wsgi:app; make run-worker
 
 
 docker-gunicorn:

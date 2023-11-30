@@ -1,5 +1,5 @@
 
-from .views import HealthCheckView
+from .views import HealthCheckView, ConvertView
 from flask_restful import Resource, Api
 from flask import Flask, request, json
 from flask_middleware_jwt import Middleware
@@ -22,7 +22,6 @@ db.init_app(app)
 db.create_all()
 
 api = Api(app)
-
-start_consuming()
 #resources
 api.add_resource(HealthCheckView, '/health')
+api.add_resource(ConvertView, '/pubsub/receive')
